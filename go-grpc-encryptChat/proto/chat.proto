@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option go_package = "./;proto";
+
+package proto;
+
+// The chating service definition.
+service Chat {
+  // Sends a Chating
+  rpc Chat (ChatReq) returns (ChatRes); // 传统的 即刻响应
+  rpc ChatIn (stream ChatReq) returns (ChatRes); // 入参为流
+  rpc ChatOut (ChatReq) returns (stream ChatRes); // 出参为流
+  rpc ChatIO (stream ChatReq) returns (stream ChatRes); // 出入均为流
+}
+
+// The request message containing the user's name.
+message ChatReq {
+  string message = 1;
+}
+
+// The response message containing the chating
+message ChatRes {
+  string message = 1;
+  MessageType message_type = 2;
+  enum MessageType{
+    CONNECT_SUCCESS = 0;
+    CONNECT_FAILED = 1;
+    NORMAL_MESSAGE = 2;
+  }
+}
