@@ -3,19 +3,22 @@ package main
 import (
 	"bufio"
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"flag"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"sync"
 
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 
 	pb "study/go-grpc-encryptCommunications/proto"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 const (
@@ -52,8 +55,29 @@ func Input(prompt string) string {
 
 func main() {
 	flag.Parse()
+
+	cert, err := tls.LoadX509KeyPair("../conf/client_cert.pem", "../conf/client_key.pem")
+	if err != nil {
+		log.Fatalf("failed to load client cert: %v", err)
+	}
+
+	ca := x509.NewCertPool()
+	caFilePath := "../conf/ca_cert.pem"
+	caBytes, err := ioutil.ReadFile(caFilePath)
+	if err != nil {
+		log.Fatalf("failed to read ca cert %q: %v", caFilePath, err)
+	}
+	if ok := ca.AppendCertsFromPEM(caBytes); !ok {
+		log.Fatalf("failed to parse %q", caFilePath)
+	}
+
+	tlsConfig := &tls.Config{
+		ServerName:   "x.test.example.com",
+		Certificates: []tls.Certificate{cert},
+		RootCAs:      ca,
+	}
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig)))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
