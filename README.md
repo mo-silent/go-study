@@ -5,6 +5,10 @@ go语言学习-比较乱
 ## benchmark
 这个是一个基准压测案例
 
+## go-grpc-helloworld
+
+官方 gRPC 案例
+
 ## go-grpc-CA
 
 基于 CA 的 TLS 证书认证的 gRPC 
