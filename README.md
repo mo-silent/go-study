@@ -16,3 +16,7 @@ go语言学习-比较乱
 ## go-grpc-encryptChat
 
 一个加密聊天室案例，通过 CA 证书加密 RPC 通信。不过显示界面还需要优化
+
+## go-redis
+
+go-redis 的使用
