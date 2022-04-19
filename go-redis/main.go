@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -16,7 +18,7 @@ func main() {
 	})
 
 	// String
-	err := rdb.Set(ctx, "key", "value", 0).Err()
+	err := rdb.Set(ctx, "key0", "value", 0).Err()
 	if err != nil {
 		panic(err)
 	}
@@ -47,6 +49,51 @@ func main() {
 		Score:  0,
 		Member: 3,
 	})
+
+	// TxPipeline
+	pipe := rdb.TxPipeline()
+	defer pipe.Close()
+
+	incr := pipe.Incr(ctx, "tx_pipeline_counter")
+	pipe.Expire(ctx, "tx_pipeline_counter", time.Hour)
+
+	// Execute
+	//
+	//     MULTI
+	//     INCR pipeline_counter
+	//     EXPIRE pipeline_counts 3600
+	//     EXEC
+	//
+	// using one rdb-server roundtrip.
+	_, err = pipe.Exec(ctx)
+	if err != nil {
+		//取消提交
+		pipe.Discard()
+	}
+	fmt.Println(incr.Val(), err)
+
+	// 事务 TxPipelined
+	cmds, err := rdb.TxPipelined(ctx, func(pipe redis.Pipeliner) error {
+		for i := 0; i < 2; i++ {
+			pipe.Get(ctx, fmt.Sprintf("key%d", i))
+		}
+		return nil
+	})
+	// MULTI
+	// GET key0
+	// GET key1
+	// ...
+	// GET key99
+	// EXEC
+
+	if err != nil {
+		panic(err)
+	}
+
+	for _, cmd := range cmds {
+		fmt.Println(cmd.(*redis.StringCmd).Val())
+	}
+
 	// val, err := rdb.Get(ctx, "key").Result()
 	// if err != nil {
 	// 	panic(err)
