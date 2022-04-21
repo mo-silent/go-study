@@ -8,7 +8,9 @@
 // }
 package main
 
-import "sync"
+import (
+	"sync"
+)
 
 func main() {
 	var wg sync.WaitGroup
