@@ -21,13 +21,16 @@ func main() {
 	go func() {
 		defer wg.Done()
 		select {
-		case v := <-bar:
-			foo <- v
+		case foo <- <-bar:
+			println("bar")
 		case <-closing:
 			println("closing")
 		}
 	}()
 	// bar <- 123
 	close(closing)
+	close(bar)
+	<-foo
+	close(foo)
 	wg.Wait()
 }
