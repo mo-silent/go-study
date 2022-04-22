@@ -1,0 +1,2 @@
+{"level":"error","ts":1650632398.8290327,"msg":"Error fetching url..","url":"www.google.com","error":"Get \"www.google.com\": unsupported protocol scheme \"\""}
+{"level":"info","ts":1650632399.860911,"msg":"Success..","statusCode":"200 OK","url":"http://www.google.com"}
