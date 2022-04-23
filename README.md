@@ -23,3 +23,7 @@ go语言学习-比较乱
 ## go-redis
 
 go-redis 的使用
+
+## go-redis-shake-decode
+
+redis-shake decode 模式下，读取 rbd 文件的流程简化
