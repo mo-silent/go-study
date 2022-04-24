@@ -16,9 +16,9 @@ type Count[T string | int | int64 | float64] struct {
 	B T
 }
 
-// CustomizationGenerics Custom generics
+// CustomizationGenerics custom type constraint
 //
-// @Description Custom generics, which are type restrictions
+// @Description custom type constraint, which are type restrictions
 // @Description ~is a new symbol added to Go 1.18, and the ~ indicates that the underlying type is all types of T. ~ is pronounced astilde in English
 // @Description 自定义泛型，即类型限制
 // @Desciption ~ 是 Go 1.18 新增的符号，~ 表示底层类型是T的所有类型。~ 的英文读作 tilde
@@ -44,10 +44,10 @@ func Add[T string | int | int64 | float64](a, b T) T {
 
 // Sub sub the values of T. It supports CustomizationGenerics
 //
-// @Description A simple subtraction function. It is used to test custom generics
+// @Description A simple subtraction function. It is used to test custom type constraint
 // @Description 一个简单的减法函数，用来测试自定义泛型
-// @parameter	a, b	T CustomizationGenerics	"custom generics parameter"
-// @return		c		T CustomizationGenerics	"custom generics return"
+// @parameter	a, b	T CustomizationGenerics	"custom type constraint parameter"
+// @return		c		T CustomizationGenerics	"custom type constraint return"
 func Sub[T CustomizationGenerics](a, b T) T {
 	return a - b
 }
