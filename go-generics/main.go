@@ -32,6 +32,9 @@ type CustomizationGenerics interface {
 // MyInt Custom type
 type MyInt int
 
+// MyChan Custom generics chan type
+type MyChan[T int | string] chan T
+
 // Add sums the values of T. It supports string, int, int64 and float64
 //
 // @Description A simple additive generic function
