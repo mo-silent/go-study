@@ -8,7 +8,10 @@
 // }
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 func main() {
 	// var wg sync.WaitGroup
@@ -39,17 +42,31 @@ func main() {
 	defer fmt.Println(1)
 	defer fmt.Println(2)
 	defer fmt.Println(3)
-	type Human struct {
-		name   string
-		age    int
-		weight int
-	}
+	// type Human struct {
+	// 	name   string
+	// 	age    int
+	// 	weight int
+	// }
 
-	type Student struct {
-		Human      // 匿名字段，那么默认Student就包含了Human的所有字段，
-		speciality string
-		int        // 内置类型作为匿名字段，变量名就是 int
-	}
-	jane := Student{Human: Human{"Jane", 35, 100}, speciality: "Biology", int: 1}
-	fmt.Println("Her preferred number is", jane.int)
+	// type Student struct {
+	// 	Human      // 匿名字段，那么默认Student就包含了Human的所有字段，
+	// 	speciality string
+	// 	int        // 内置类型作为匿名字段，变量名就是 int
+	// }
+	// jane := Student{Human: Human{"Jane", 35, 100}, speciality: "Biology", int: 1}
+	// fmt.Println("Her preferred number is", jane.int)
+
+	Bob := Human{"Bob", 39, "sssfgf"}
+	fmt.Println("This Human is : ", Bob)
+}
+
+type Human struct {
+	name  string
+	age   int
+	phone string
+}
+
+// 通过这个方法 Human 实现了 fmt.Stringer
+func (h Human) String() string {
+	return "❰" + h.name + " - " + strconv.Itoa(h.age) + " years -  ✆ " + h.phone + "❱"
 }
