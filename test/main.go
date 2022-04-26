@@ -56,8 +56,26 @@ func main() {
 	// jane := Student{Human: Human{"Jane", 35, 100}, speciality: "Biology", int: 1}
 	// fmt.Println("Her preferred number is", jane.int)
 
-	Bob := Human{"Bob", 39, "sssfgf"}
-	fmt.Println("This Human is : ", Bob)
+	// Bob := Human{"Bob", 39, "sssfgf"}
+	// fmt.Println("This Human is : ", Bob)
+
+	// A interview questions
+	m := make(map[int]int, 10)
+	for i := 1; i <= 10; i++ {
+		m[i] = i
+	}
+	// 闭包使用外部变量，输出会有问题
+	// for k, v := range m {
+	// 	go func() {
+	// 		fmt.Println("k ->", k, "v ->", v)
+	// 	}()
+	// }
+	// 解决，不要闭包直接使用外部变量，通过传参就能解决了
+	for k, v := range m {
+		go func(a, b int) {
+			fmt.Println("k ->", a, "v ->", b)
+		}(k, v)
+	}
 }
 
 type Human struct {
