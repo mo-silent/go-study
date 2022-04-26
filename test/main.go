@@ -36,4 +36,7 @@ func main() {
 	a := ar[2:5]
 	a[0] = 'd'
 	fmt.Println(ar)
+	defer fmt.Println(1)
+	defer fmt.Println(2)
+	defer fmt.Println(3)
 }
