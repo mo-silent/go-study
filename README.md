@@ -1,3 +1,6 @@
+> Author mogd 2022-04-08
+> Update mogd 2022-05-06
+
 # go-study
 go语言学习-比较乱
 
@@ -27,3 +30,7 @@ go-redis 的使用
 ## go-redis-shake-decode
 
 redis-shake decode 模式下，读取 rbd 文件的流程简化
+
+## go-build-system 
+
+go-build-system 指定 go 文件生成不同操作系统的可执行文件
