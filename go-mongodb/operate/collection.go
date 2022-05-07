@@ -29,7 +29,7 @@ func MongoCollectionOperate(action string, db *mongo.Database, col *mongo.Collec
 	case "create":
 		res = MongoCreateCollection(db)
 	default:
-		res = fmt.Sprintln("Invalid action, Please select the correct action (list and drop)!")
+		res = fmt.Sprintln("Invalid action, Please select the correct action (list, drop, create)!")
 	}
 	return res
 }

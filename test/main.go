@@ -76,6 +76,12 @@ func main() {
 			fmt.Println("k ->", a, "v ->", b)
 		}(k, v)
 	}
+
+	doc := []interface{}{
+		"test",
+		"name",
+	}
+	fmt.Printf("%T\n", doc)
 }
 
 type Human struct {
