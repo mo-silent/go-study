@@ -43,7 +43,7 @@ func main() {
 
 	Mdb = Client.Database("test")
 	Col = Mdb.Collection("test")
-	opt := "collection"
+	opt := "doc"
 	action := "create"
 	var result interface{}
 	switch opt {

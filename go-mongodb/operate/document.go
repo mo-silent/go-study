@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"reflect"
 
 	bson "go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -23,7 +24,7 @@ func MongoDocumentOperate(action string, coll *mongo.Collection) interface{} {
 	case "list":
 		res = MongoListAllDocument(coll)
 	case "drop":
-		docs := bson.D{{"name", "bob"}}
+		docs := bson.D{{Key: "name", Value: "bob"}}
 		res = MongoDropDocument(coll, docs)
 	case "create":
 		docs := []interface{}{
@@ -101,6 +102,7 @@ func MongoCreateDocument(coll *mongo.Collection, docs interface{}) interface{} {
 		}
 		return res.InsertedID
 	default:
+		fmt.Println(reflect.TypeOf(docs))
 		return fmt.Sprintln("Invalid param, Please input the correct param ([]interface{}, interface{})!")
 	}
 }
