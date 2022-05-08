@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	bson "go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -26,10 +27,11 @@ func MongoDocumentOperate(action string, coll *mongo.Collection) interface{} {
 		docs := bson.D{{Key: "name", Value: "bob"}}
 		res = MongoDropDocument(coll, docs)
 	case "create":
-		docs := []interface{}{
-			bson.D{{Key: "name", Value: "Alice"}},
-			bson.D{{Key: "name", Value: "Bob"}},
-		}
+		//docs := []interface{}{
+		//	bson.D{{Key: "name", Value: "Alice"}},
+		//	bson.D{{Key: "name", Value: "Bob"}},
+		//}
+		docs := bson.D{{Key: "name", Value: "Bob11"}}
 		res = MongoCreateDocument(coll, docs)
 	default:
 		res = fmt.Sprintln("Invalid action, Please select the correct action (list, drop, create)!")
@@ -84,7 +86,6 @@ func MongoDropDocument(coll *mongo.Collection, docs interface{}) string {
 //
 // return []interface{}
 func MongoCreateDocument(coll *mongo.Collection, docs interface{}) interface{} {
-	fmt.Println(reflect.TypeOf(docs))
 	switch docs.(type) {
 	case []interface{}:
 		opts := options.InsertMany().SetOrdered(false)
@@ -94,7 +95,7 @@ func MongoCreateDocument(coll *mongo.Collection, docs interface{}) interface{} {
 			return err
 		}
 		return res.InsertedIDs
-	case interface{}:
+	case primitive.D:
 		res, err := coll.InsertOne(context.TODO(), docs)
 		if err != nil {
 			log.Fatal(err)
@@ -102,6 +103,7 @@ func MongoCreateDocument(coll *mongo.Collection, docs interface{}) interface{} {
 		}
 		return res.InsertedID
 	default:
+		fmt.Println(reflect.TypeOf(docs))
 		return fmt.Sprintln("Invalid param, Please input the correct param ([]interface{}, interface{})!")
 	}
 }
