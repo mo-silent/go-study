@@ -86,7 +86,7 @@ func MongoDropDocument(coll *mongo.Collection, docs interface{}) string {
 // return []interface{}
 func MongoCreateDocument(coll *mongo.Collection, docs interface{}) interface{} {
 	switch docs.(type) {
-	case []bson.D:
+	case []interface{}:
 		opts := options.InsertMany().SetOrdered(false)
 		res, err := coll.InsertMany(context.TODO(), docs.([]interface{}), opts)
 		if err != nil {
@@ -94,7 +94,7 @@ func MongoCreateDocument(coll *mongo.Collection, docs interface{}) interface{} {
 			return err
 		}
 		return res.InsertedIDs
-	case bson.D:
+	case interface{}:
 		res, err := coll.InsertOne(context.TODO(), docs)
 		if err != nil {
 			log.Fatal(err)
