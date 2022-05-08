@@ -24,7 +24,7 @@ func MongoDocumentOperate(action string, coll *mongo.Collection) interface{} {
 	case "list":
 		res = MongoListAllDocument(coll)
 	case "drop":
-		docs := bson.D{{Key: "name", Value: "bob"}}
+		docs := bson.D{{Key: "name", Value: "Bob"}}
 		res = MongoDropDocument(coll, docs)
 	case "create":
 		//docs := []interface{}{
