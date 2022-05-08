@@ -3,12 +3,11 @@ package operate
 import (
 	"context"
 	"fmt"
+	bson "go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"reflect"
-
-	bson "go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // MongoDocumentOperate mongo document operate
@@ -85,6 +84,7 @@ func MongoDropDocument(coll *mongo.Collection, docs interface{}) string {
 //
 // return []interface{}
 func MongoCreateDocument(coll *mongo.Collection, docs interface{}) interface{} {
+	fmt.Println(reflect.TypeOf(docs))
 	switch docs.(type) {
 	case []interface{}:
 		opts := options.InsertMany().SetOrdered(false)
@@ -102,7 +102,6 @@ func MongoCreateDocument(coll *mongo.Collection, docs interface{}) interface{} {
 		}
 		return res.InsertedID
 	default:
-		fmt.Println(reflect.TypeOf(docs))
 		return fmt.Sprintln("Invalid param, Please input the correct param ([]interface{}, interface{})!")
 	}
 }
