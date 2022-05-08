@@ -3,9 +3,10 @@ package operate
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 
-	"go.mongodb.org/mongo-driver/bson"
+	bson "go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -22,7 +23,8 @@ func MongoDocumentOperate(action string, coll *mongo.Collection) interface{} {
 	case "list":
 		res = MongoListAllDocument(coll)
 	case "drop":
-		res = MongoDropDocument(coll)
+		docs := bson.D{{"name", "bob"}}
+		res = MongoDropDocument(coll, docs)
 	case "create":
 		docs := []interface{}{
 			bson.D{{Key: "name", Value: "Alice"}},
@@ -35,6 +37,11 @@ func MongoDocumentOperate(action string, coll *mongo.Collection) interface{} {
 	return res
 }
 
+// MongoListAllDocument list mongodb document
+//
+// param coll *mongo.Collection "a handle for a Collection"
+//
+// return []bson.M
 func MongoListAllDocument(coll *mongo.Collection) []bson.M {
 	// opts := options.Find().SetSort(bson.D{{Key: "age", Value: 1}})
 	cursor, err := coll.Find(context.TODO(), bson.D{})
@@ -53,10 +60,47 @@ func MongoListAllDocument(coll *mongo.Collection) []bson.M {
 	return results
 }
 
-func MongoDropDocument(coll *mongo.Collection) string {
-	return "drop document success!"
+// MongoDropDocument drop mongodb document
+//
+// param coll *mongo.Collection "a handle for a Collection"
+//
+// param docs interface{} actually bson.D{}
+//
+// return string
+func MongoDropDocument(coll *mongo.Collection, docs interface{}) string {
+	res, err := coll.DeleteMany(context.TODO(), docs)
+	if err != nil {
+		log.Fatal(err)
+		return fmt.Sprintf("err: %v\n", err)
+	}
+	return fmt.Sprintf("deleted %v documents\n", res.DeletedCount)
 }
 
-func MongoCreateDocument[T []interface{} | interface{}](coll *mongo.Collection, docs T) []interface{} {
-	return nil
+// MongoCreateDocument create mongodb document
+//
+// param coll *mongo.Collection "a handle for a Collection"
+//
+// param docs generics T actually []bson.D{} or bson.D{}
+//
+// return []interface{}
+func MongoCreateDocument[T []interface{} | interface{}](coll *mongo.Collection, docs T) interface{} {
+	switch docs.(type) {
+	case []interface{}:
+		opts := options.InsertMany().SetOrdered(false)
+		res, err := coll.InsertMany(context.TODO(), docs.([]interface{}), opts)
+		if err != nil {
+			log.Fatal(err)
+			return err
+		}
+		return res.InsertedIDs
+	case interface{}:
+		res, err := coll.InsertOne(context.TODO(), docs)
+		if err != nil {
+			log.Fatal(err)
+			return err
+		}
+		return res.InsertedID
+	default:
+		return fmt.Sprintln("Invalid param, Please input the correct param ([]interface{}, interface{})!")
+	}
 }

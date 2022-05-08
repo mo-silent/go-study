@@ -34,6 +34,11 @@ func MongoCollectionOperate(action string, db *mongo.Database, col *mongo.Collec
 	return res
 }
 
+// MongoListCollection list mongodb all collection
+//
+// param db *mongo.Database "a handle for a database"
+//
+// return []bson.M
 func MongoListCollection(db *mongo.Database) []bson.M {
 	result, err := db.ListCollections(
 		context.TODO(),
@@ -45,11 +50,17 @@ func MongoListCollection(db *mongo.Database) []bson.M {
 	var results []bson.M
 	if err := result.All(context.TODO(), &results); err != nil {
 		log.Fatal(err)
+		return []bson.M{bson.M{"err": err}}
 	}
 	// fmt.Println(results)
 	return results
 }
 
+// MongoDropCollection drop mongodb collection
+//
+// param col *mongo.Collection "a handle for a collection"
+//
+// return string
 func MongoDropCollection(col *mongo.Collection) string {
 	err := col.Drop(context.TODO())
 	if err != nil {
@@ -58,6 +69,11 @@ func MongoDropCollection(col *mongo.Collection) string {
 	return "drop collection success"
 }
 
+// MongoCreateCollection create mongodb collection
+//
+// param db *mongo.Database "a handle for a database"
+//
+// return string
 func MongoCreateCollection(db *mongo.Database) string {
 	opts := options.CreateCollection().SetValidator(bson.M{})
 	err := db.CreateCollection(context.TODO(), "users", opts)

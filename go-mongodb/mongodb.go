@@ -22,39 +22,39 @@ import (
 const uri = "mongodb://39.101.244.245:27017/?maxPoolSize=20&w=majority&connect=direct"
 
 var (
-	Mclient *mongo.Client
-	Mdb     *mongo.Database
-	Mcol    *mongo.Collection
+	Client *mongo.Client
+	Mdb    *mongo.Database
+	Col    *mongo.Collection
 )
 
 func main() {
-	Mclient = MongoClient()
+	Client = MongoClient()
 	defer func() {
-		if err := Mclient.Disconnect(context.TODO()); err != nil {
+		if err := Client.Disconnect(context.TODO()); err != nil {
 			panic(err)
 		}
 	}()
 	// Ping the primary
-	// if err := Mclient.Ping(context.TODO(), readpref.Primary()); err != nil {
+	// if err := Client.Ping(context.TODO(), readpref.Primary()); err != nil {
 	// 	panic(err)
 	// }
 	// fmt.Println("Successfully connected and pinged.")
 	// ListMongoDatabaseName()
 
-	Mdb = Mclient.Database("test")
-	Mcol = Mdb.Collection("test")
+	Mdb = Client.Database("test")
+	Col = Mdb.Collection("test")
 	opt := "collection"
 	action := "create"
 	var result interface{}
 	switch opt {
 	case "db":
-		result = db.MongoDbOperate(action, Mclient, Mdb)
+		result = db.MongoDbOperate(action, Client, Mdb)
 		fmt.Println(result)
 	case "collection":
-		result = db.MongoCollectionOperate(action, Mdb, Mcol)
+		result = db.MongoCollectionOperate(action, Mdb, Col)
 		fmt.Println(result)
 	case "doc":
-		result = db.MongoDocumentOperate(action, Mcol)
+		result = db.MongoDocumentOperate(action, Col)
 		fmt.Println(result)
 	default:
 		fmt.Println("nothing to do!")
@@ -80,8 +80,4 @@ func MongoClient() *mongo.Client {
 		panic(err)
 	}
 	return client
-}
-
-func InsertDoc(col *mongo.Collection) {
-
 }
