@@ -87,24 +87,24 @@ func MongoDropDocument(coll *mongo.Collection, docs interface{}) string {
 //
 // return []interface{}
 func MongoCreateDocument(coll *mongo.Collection, docs interface{}) interface{} {
-	switch v := docs.(type) {
+	switch docs := docs.(type) {
 	case []interface{}:
 		opts := options.InsertMany().SetOrdered(false)
-		res, err := coll.InsertMany(context.TODO(), v, opts)
+		res, err := coll.InsertMany(context.TODO(), docs, opts)
 		if err != nil {
 			log.Fatal(err)
 			return err
 		}
 		return res.InsertedIDs
 	case primitive.D:
-		res, err := coll.InsertOne(context.TODO(), v)
+		res, err := coll.InsertOne(context.TODO(), docs)
 		if err != nil {
 			log.Fatal(err)
 			return err
 		}
 		return res.InsertedID
 	default:
-		fmt.Println(reflect.TypeOf(v))
+		fmt.Println(reflect.TypeOf(docs))
 		return fmt.Sprintln("Invalid param, Please input the correct param ([]interface{}, interface{})!")
 	}
 }
