@@ -13,12 +13,11 @@ import (
 )
 
 var (
-	Client *http.Client
-	URL    = "http://mip.chinaz.com/?query="
+	// Client *http.Client
+	URL = "http://mip.chinaz.com/?query="
 )
 
 func main() {
-	Client = &http.Client{Timeout: 10 * time.Second}
 
 	f, err := os.Open("D:/文件/2022-05-12/ip.txt")
 	if err != nil {
@@ -36,9 +35,15 @@ func main() {
 	write := bufio.NewWriter(fw)
 
 	scanner := bufio.NewScanner(f)
+
+	countLine := int(0)
 	for scanner.Scan() {
 		line := scanner.Text() // or
 		//line := scanner.Bytes()
+		if (countLine != 0) && (countLine%20 == 0) {
+			fmt.Println(countLine)
+			time.Sleep(60 * time.Second)
+		}
 		getRes := Get(line)
 		r := regexp.MustCompile(`<td class="z-tc">\s*(.*?)\s*<br />`)
 		address := r.FindAllStringSubmatch(getRes, -1)
@@ -50,8 +55,9 @@ func main() {
 		}
 
 		// 写入文件
-
+		// fmt.Println(addressResponse)
 		write.WriteString(addressResponse)
+		countLine += 1
 
 	}
 	write.Flush()
@@ -62,7 +68,8 @@ func main() {
 }
 
 func Get(ip string) string {
-	res, err := Client.Get(URL + ip)
+	client := &http.Client{Timeout: 30 * time.Second}
+	res, err := client.Get(URL + ip)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -75,7 +82,7 @@ func Get(ip string) string {
 		if err != nil && err == io.EOF {
 			break
 		} else if err != nil {
-			panic(err)
+			fmt.Println(ip)
 		}
 	}
 
