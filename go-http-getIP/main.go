@@ -1,8 +1,13 @@
+// Author mogd 2022-05-12
+//
+// Update mogd 2022-05-13
+
 package main
 
 import (
 	"bufio"
 	"bytes"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -14,21 +19,26 @@ import (
 
 var (
 	// Client *http.Client
-	URL = "http://mip.chinaz.com/?query="
+	INPUTFILE  string
+	OUTPUTFILE string
+	URL        = "http://mip.chinaz.com/?query="
 )
 
 func main() {
+	flag.StringVar(&INPUTFILE, "infile", "D:/文件/2022-05-12/ip.txt", "input file")
+	flag.StringVar(&OUTPUTFILE, "outfile", "D:/文件/2022-05-12/ip.csv", "output file for csv")
+	flag.Parse()
 
-	f, err := os.Open("D:/文件/2022-05-12/ip.txt")
+	f, err := os.Open(INPUTFILE)
 	if err != nil {
 		log.Fatal(err)
 		panic(err)
 	}
 	defer f.Close()
 
-	fw, err := os.OpenFile("D:/文件/2022-05-12/AFK.csv", os.O_WRONLY|os.O_CREATE, 0777)
+	fw, err := os.OpenFile(OUTPUTFILE, os.O_WRONLY|os.O_CREATE, 0777)
 	if err != nil {
-		fmt.Println("文件打开失败", err)
+		log.Println("文件打开失败", err)
 	}
 	defer fw.Close()
 
@@ -41,7 +51,7 @@ func main() {
 		line := scanner.Text() // or
 		//line := scanner.Bytes()
 		if (countLine != 0) && (countLine%20 == 0) {
-			fmt.Println(countLine)
+			log.Println(countLine)
 			time.Sleep(60 * time.Second)
 		}
 		getRes := Get(line)
@@ -50,7 +60,7 @@ func main() {
 
 		var addressResponse string
 		for _, v := range address {
-			fmt.Println(v[1])
+			log.Println(v[1])
 			addressResponse = fmt.Sprintln(line + "," + v[1])
 		}
 
@@ -67,11 +77,17 @@ func main() {
 	}
 }
 
+// Get Get the physical address over IP
+//
+// param ip string
+//
+// return string address
 func Get(ip string) string {
 	client := &http.Client{Timeout: 30 * time.Second}
 	res, err := client.Get(URL + ip)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return "NAT"
 	}
 	defer res.Body.Close()
 	var buffer [512]byte
@@ -82,7 +98,8 @@ func Get(ip string) string {
 		if err != nil && err == io.EOF {
 			break
 		} else if err != nil {
-			fmt.Println(ip)
+			log.Println(ip)
+			return "NAT"
 		}
 	}
 

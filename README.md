@@ -1,6 +1,6 @@
 > Author mogd 2022-04-08
 > \
-> Update mogd 2022-05-07
+> Update mogd 2022-05-13
 
 # go-study
 go语言学习-比较乱
@@ -45,6 +45,10 @@ go-mongodb go 操作 mongoDB 的案例，计划形成接口，让前端调用，
 > 个人抓包到的 IP 来解析实际属于哪个云厂商，读者可忽略
 
 go-http-getIP go 使用 net/http 包请求 [IP 查询网站](http://mip.chinaz.com/?query=)来正则拿到 IP 对应的物理地址
+
+命令行传参 `go run main.go -infile=D:/文件/2022-05-12/tmp.txt -outfile=D:/文件/2022-05-12/tmp.csv`
+1. `-infile` 要查询的 I P列表，`txt` 或者 `csv`，没做类型判断
+2. `outfile` 要输出的信息文件路径，`csv` 格式，没做类型判断
 
 ## go-ping
 
