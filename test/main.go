@@ -10,10 +10,15 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strconv"
+
+	"github.com/go-ping/ping"
 )
 
 func main() {
+	Ping()
+	return
 	// var wg sync.WaitGroup
 	// foo := make(chan int)
 	// bar := make(chan int)
@@ -93,4 +98,44 @@ type Human struct {
 // 通过这个方法 Human 实现了 fmt.Stringer
 func (h Human) String() string {
 	return "❰" + h.name + " - " + strconv.Itoa(h.age) + " years -  ✆ " + h.phone + "❱"
+}
+
+func Ping() {
+	// pinger, err := ping.NewPinger("www.google.com")
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	// // Listen for Ctrl-C.
+	// c := make(chan os.Signal, 1)
+	// signal.Notify(c, os.Interrupt)
+	// go func() {
+	// 	for _ = range c {
+	// 		pinger.Stop()
+	// 	}
+	// }()
+
+	// pinger.OnRecv = func(pkt *ping.Packet) {
+	// 	fmt.Printf("%d bytes from %s: icmp_seq=%d time=%v\n",
+	// 		pkt.Nbytes, pkt.IPAddr, pkt.Seq, pkt.Rtt)
+	// }
+
+	pinger, err := ping.NewPinger("39.101.244.245")
+	pinger.SetPrivileged(true)
+	if err != nil {
+		log.Println(err)
+	}
+	pinger.OnRecv = func(pkt *ping.Packet) {
+		fmt.Printf("%d bytes from %s: icmp_seq=%d time=%v\n",
+			pkt.Nbytes, pkt.IPAddr, pkt.Seq, pkt.Rtt)
+	}
+	pinger.Count = 5
+	fmt.Printf("PING %s (%s):\n", pinger.Addr(), pinger.IPAddr())
+	err = pinger.Run() // Blocks until finished.
+	if err != nil {
+		log.Println(err)
+	}
+
+	stats := pinger.Statistics()
+	fmt.Println(stats)
 }

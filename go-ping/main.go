@@ -16,11 +16,13 @@ import (
 var (
 	INPUTFILE  string
 	OUTPUTFILE string
+	OPT        string
 )
 
 func main() {
 	flag.StringVar(&INPUTFILE, "infile", "./tmp.txt", "input file")
 	flag.StringVar(&OUTPUTFILE, "outfile", "./tmp.csv", "output file for csv")
+	flag.StringVar(&OPT, "opt", "ip", "domain or ip")
 	flag.Parse()
 
 	f, err := os.Open(INPUTFILE)
@@ -39,11 +41,11 @@ func main() {
 
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
-		domain := scanner.Text() // or
-		ip := GetIP(domain)
+		s := scanner.Text() // or
+		ip := Get(s)
 
 		// 写入文件
-		write.WriteString(fmt.Sprintln(domain + "," + ip))
+		write.WriteString(fmt.Sprintln(s + "," + ip))
 
 	}
 	write.Flush()
@@ -55,24 +57,31 @@ func main() {
 
 }
 
-// GetIP Get the IP by pinging the domain name
+// Get Get the IP or AvgRtt by pinging
 //
-// param domain string
+// param domain or ip string
 //
 // return string ip or NAT
-func GetIP(domain string) string {
-	pinger, err := ping.NewPinger(domain)
+func Get(s string) string {
+	pinger, err := ping.NewPinger(s)
 	pinger.SetPrivileged(true)
 	if err != nil {
 		log.Println(err)
 		return "NAT"
 	}
-	pinger.Count = 1
+	pinger.Count = 5
 	err = pinger.Run() // Blocks until finished.
 	if err != nil {
 		log.Println(err)
 		return "NAT"
 	}
 	stats := pinger.Statistics()
-	return stats.IPAddr.String()
+	switch OPT {
+	case "ip":
+		return stats.IPAddr.String()
+	case "rtt":
+		return stats.AvgRtt.String()
+	default:
+		return "NAT"
+	}
 }
