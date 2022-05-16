@@ -9,6 +9,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"os"
@@ -36,11 +37,12 @@ func main() {
 	flag.StringVar(&CGO_ENABLED, "cgo", "0", "1 or 0")
 	flag.StringVar(&GOOS, "goos", "linux", "The operating system of the target platform(darwin or freebsd or linux or windows)")
 	flag.StringVar(&GOARCH, "goarch", "amd64", "The architecture of the target platform(386 or amd64 or arm)")
-	flag.StringVar(&File, "infile", "../go-mongodb/mongodb.go", "Files that need to be compiled")
-	flag.StringVar(&OutputFile, "outfile", "main.exe", "File that need to be output")
+	flag.StringVar(&File, "infile", "../go-ping/main.go", "Files that need to be compiled")
+	flag.StringVar(&OutputFile, "outfile", "D:/文件/2022-05-16/go-ping.exe", "File that need to be output")
 	flag.Parse()
 
-	buildFile()
+	fmt.Println(File)
+	defer buildFile()
 }
 
 // buildFile Edit environment variables and build the executable file
@@ -49,12 +51,17 @@ func buildFile() {
 	os.Setenv("GOOS", GOOS)
 	os.Setenv("GOARCH", GOARCH)
 
+	var (
+		out, stderr bytes.Buffer
+	)
+	fmt.Println(OutputFile, File)
 	cmd := exec.Command("go", "build", "-o", OutputFile, File)
 	cmd.Env = os.Environ()
-
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
 	err := cmd.Run()
 	if err != nil {
-		fmt.Println("***err:", err)
+		fmt.Println("err:", stderr.String())
 		return
 	}
 }
