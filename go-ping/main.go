@@ -43,7 +43,7 @@ func main() {
 	for scanner.Scan() {
 		s := scanner.Text() // or
 		ip := Get(s)
-
+		fmt.Println(s + "," + ip)
 		// 写入文件
 		write.WriteString(fmt.Sprintln(s + "," + ip))
 
