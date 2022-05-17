@@ -1,6 +1,6 @@
 // Author mogd 2022-05-12
 //
-// Update mogd 2022-05-13
+// Update mogd 2022-05-17
 
 package main
 
@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strings"
 	"time"
 )
 
@@ -36,7 +37,7 @@ func main() {
 	}
 	defer f.Close()
 
-	fw, err := os.OpenFile(OUTPUTFILE, os.O_WRONLY|os.O_CREATE, 0777)
+	fw, err := os.OpenFile(OUTPUTFILE, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0777)
 	if err != nil {
 		log.Println("文件打开失败", err)
 	}
@@ -52,7 +53,7 @@ func main() {
 		//line := scanner.Bytes()
 		if (countLine != 0) && (countLine%20 == 0) {
 			log.Println(countLine)
-			time.Sleep(60 * time.Second)
+			time.Sleep(20 * time.Second)
 		}
 		getRes := Get(line)
 		r := regexp.MustCompile(`<td class="z-tc">\s*(.*?)\s*<br />`)
@@ -60,13 +61,23 @@ func main() {
 
 		var addressResponse string
 		for _, v := range address {
-			log.Println(v[1])
-			addressResponse = fmt.Sprintln(line + "," + v[1])
+			// log.Println(v[1])
+			addressResponse = fmt.Sprintf(line + "," + v[1])
 		}
 
+		cloud := regexp.MustCompile(`(微软云)|(谷歌云)|(亚马逊云)|(华为云)|(阿里云)|(腾讯云)`)
+		judgeTmp := cloud.FindAllStringSubmatch(addressResponse, -1)
+		var judge string
+		for _, v := range judgeTmp {
+			judge = v[0]
+		}
+		if strings.Contains(addressResponse, judge) && len(judge) != 0 {
+			log.Printf("%v : %v: %v\n", line, judge, len(judge))
+			write.WriteString(fmt.Sprintln(addressResponse + "," + judge))
+		}
 		// 写入文件
 		// fmt.Println(addressResponse)
-		write.WriteString(addressResponse)
+		// write.WriteString(addressResponse)
 		countLine += 1
 
 	}

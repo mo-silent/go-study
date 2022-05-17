@@ -11,13 +11,27 @@ package main
 import (
 	"fmt"
 	"log"
+	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/go-ping/ping"
 )
 
 func main() {
-	Ping()
+	addressResponse := "巴西圣保罗 华为"
+	cloud := regexp.MustCompile(`(微软云)|(谷歌云)|(亚马逊云)|(华为云)|(阿里云)|(腾讯云)`)
+	judgeTmp := cloud.FindAllStringSubmatch(addressResponse, -1)
+	fmt.Println(judgeTmp)
+	var judge string
+	for _, v := range judgeTmp {
+		fmt.Println(v)
+		judge = v[1]
+	}
+	if strings.Contains(addressResponse, judge) {
+		fmt.Println("test")
+	}
+	// Ping()
 	return
 	// var wg sync.WaitGroup
 	// foo := make(chan int)
