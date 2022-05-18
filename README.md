@@ -62,3 +62,9 @@ go-ping go 使用 ping 包来获取域名对应的 IP 地址
 > 个人用途，忽略
 
 go-smokeping-conf 读取 CSV 文件，生成 smokeping 的配置文件
+
+## go-cloud-ping
+
+> 个人用途，忽略
+
+go-cloud-ping 读取文件，获取ping 延迟和丢包
