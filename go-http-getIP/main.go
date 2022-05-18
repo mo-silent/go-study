@@ -14,7 +14,6 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"strings"
 	"time"
 )
 
@@ -65,19 +64,22 @@ func main() {
 			addressResponse = fmt.Sprintf(line + "," + v[1])
 		}
 
-		cloud := regexp.MustCompile(`(微软云)|(谷歌云)|(亚马逊云)|(华为云)|(阿里云)|(腾讯云)`)
-		judgeTmp := cloud.FindAllStringSubmatch(addressResponse, -1)
-		var judge string
-		for _, v := range judgeTmp {
-			judge = v[0]
-		}
-		if strings.Contains(addressResponse, judge) && len(judge) != 0 {
-			log.Printf("%v : %v: %v\n", line, judge, len(judge))
-			write.WriteString(fmt.Sprintln(addressResponse + "," + judge))
-		}
+		// cloud := regexp.MustCompile(`(微软云)|(谷歌云)|(亚马逊云)|(华为云)|(阿里云)|(腾讯云)`)
+		// judgeTmp := cloud.FindAllStringSubmatch(addressResponse, -1)
+		// var judge string
+		// for _, v := range judgeTmp {
+		// 	judge = v[0]
+		// }
+		// if strings.Contains(addressResponse, judge) && len(judge) != 0 {
+		// 	log.Printf("%v : %v: %v\n", line, judge, len(judge))
+		// 	write.WriteString(fmt.Sprintln(addressResponse + "," + judge))
+		// } else {
+		// 	log.Printf("%v\n", line)
+		// 	write.WriteString(fmt.Sprintln(addressResponse + ",other"))
+		// }
 		// 写入文件
-		// fmt.Println(addressResponse)
-		// write.WriteString(addressResponse)
+		fmt.Println(addressResponse)
+		write.WriteString(fmt.Sprintln(addressResponse))
 		countLine += 1
 
 	}
