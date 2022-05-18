@@ -1,5 +1,8 @@
 // Author mogd 2022-05-13
-// Update mogd 2022-05-17
+//
+// Update mogd 2022-05-18
+//
+// Description Get the delay by ping
 
 package main
 
@@ -51,13 +54,22 @@ func main() {
 	for scanner.Scan() {
 		s := scanner.Text()
 		res := GetPing(s)
-		SugarLogger.Info("write: ",
-			zap.String("source: ", s),
-			zap.String("target: ", res))
+		if res != nil {
+			SugarLogger.Info("write: ", zap.String("source: ", s), res)
 
-		// 写入文件
-		write.WriteString(fmt.Sprintln(s + "," + res))
+			// 写入文件
+			writeData := fmt.Sprintln(s + ",")
+			switch OPT {
+			case "ip":
+				writeData = fmt.Sprintln(writeData + res.IPAddr.String())
+			case "rtt":
+				writeData = fmt.Sprintf("%v,%v,%v%%\n", writeData, res.AvgRtt.String(), res.PacketLoss)
+			default:
+				writeData = ""
+			}
 
+			write.WriteString(writeData)
+		}
 	}
 	write.Flush()
 	fmt.Println("write success!")
@@ -75,13 +87,13 @@ func main() {
 //
 // param domain or ip string
 //
-// return string ip or NAT
-func GetPing(s string) string {
+// return *ping.Statistics
+func GetPing(s string) *ping.Statistics {
 	pinger, err := ping.NewPinger(s)
 	pinger.SetPrivileged(true)
 	if err != nil {
 		SugarLogger.Error("New Pinger error: ", zap.Error(err))
-		return "NAT"
+		return nil
 	}
 	pinger.Count = 1
 	pinger.Timeout = 5 * time.Second
@@ -89,17 +101,18 @@ func GetPing(s string) string {
 	err = pinger.Run() // Blocks until finished.
 	if err != nil {
 		SugarLogger.Error("Pinger run error: ", zap.Error(err))
-		return "NAT"
+		return nil
 	}
 	stats := pinger.Statistics()
-	switch OPT {
-	case "ip":
-		return stats.IPAddr.String()
-	case "rtt":
-		return stats.AvgRtt.String()
-	default:
-		return "NAT"
-	}
+	return stats
+	// switch OPT {
+	// case "ip":
+	// 	return stats.IPAddr.String()
+	// case "rtt":
+	// 	return stats.AvgRtt.String()
+	// default:
+	// 	return "NAT"
+	// }
 }
 
 // InitLogger init logger

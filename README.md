@@ -57,3 +57,8 @@ go-ping go 使用 ping 包来获取域名对应的 IP 地址
 命令行传参 `go run main.go -infile=D:/文件/2022-05-12/tmp.txt -outfile=D:/文件/2022-05-12/tmp.csv`
 1. `-infile` 要查询的域名列表，`txt` 或者 `csv`，没做类型判断
 2. `outfile` 要输出的信息文件路径，`csv` 格式，没做类型判断
+
+## go-smokeping-conf
+> 个人用途，忽略
+
+go-smokeping-conf 读取 CSV 文件，生成 smokeping 的配置文件

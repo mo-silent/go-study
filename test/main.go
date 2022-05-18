@@ -32,7 +32,7 @@ func main() {
 		fmt.Println("test")
 	}
 	// Ping()
-	return
+	// return
 	// var wg sync.WaitGroup
 	// foo := make(chan int)
 	// bar := make(chan int)
