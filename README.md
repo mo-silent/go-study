@@ -1,6 +1,6 @@
 > Author mogd 2022-04-08
 > \
-> Update mogd 2022-05-13
+> Update mogd 2022-05-23
 
 # go-study
 go语言学习-比较乱
@@ -68,3 +68,7 @@ go-smokeping-conf 读取 CSV 文件，生成 smokeping 的配置文件
 > 个人用途，忽略
 
 go-cloud-ping 读取文件，获取ping 延迟和丢包
+
+## PAT 
+
+PAT 浙大的PAT真题练习代码
