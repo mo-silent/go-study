@@ -1,3 +1,6 @@
+// Author mogd 2022-05-23
+// Update mogd 2022-05-23
+// Description supposed to find A+B where A and B are two polynomials.
 package main
 
 import (
