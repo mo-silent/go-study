@@ -21,11 +21,7 @@ import (
 // uri Connection URI
 const uri = "mongodb://39.101.244.245:27017/?maxPoolSize=20&w=majority&connect=direct"
 
-var (
-	Client *mongo.Client
-	Mdb    *mongo.Database
-	Col    *mongo.Collection
-)
+var Client *mongo.Client
 
 func main() {
 	Client = MongoClient()
@@ -41,20 +37,20 @@ func main() {
 	// fmt.Println("Successfully connected and pinged.")
 	// ListMongoDatabaseName()
 
-	Mdb = Client.Database("test")
-	Col = Mdb.Collection("test")
+	mongoDB := Client.Database("test")
+	mongoCollection := mongoDB.Collection("test")
 	opt := "doc"
 	action := "create"
 	var result interface{}
 	switch opt {
 	case "db":
-		result = db.MongoDbOperate(action, Client, Mdb)
+		result = db.MongoDbOperate(action, Client, mongoDB)
 		fmt.Println(result)
 	case "collection":
-		result = db.MongoCollectionOperate(action, Mdb, Col)
+		result = db.MongoCollectionOperate(action, mongoDB, mongoCollection)
 		fmt.Println(result)
 	case "doc":
-		result = db.MongoDocumentOperate(action, Col)
+		result = db.MongoDocumentOperate(action, mongoCollection)
 		fmt.Println(result)
 	default:
 		fmt.Println("nothing to do!")

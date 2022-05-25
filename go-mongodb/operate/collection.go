@@ -16,16 +16,16 @@ import (
 //
 // param db *mongo.Database "a handle for a database"
 //
-// param col *mongo.Collection "a handle for a collection"
+// param coll *mongo.Collection "a handle for a collection"
 //
 // return interface{}
-func MongoCollectionOperate(action string, db *mongo.Database, col *mongo.Collection) interface{} {
+func MongoCollectionOperate(action string, db *mongo.Database, coll *mongo.Collection) interface{} {
 	var res interface{}
 	switch action {
 	case "list":
 		res = MongoListCollection(db)
 	case "drop":
-		res = MongoDropCollection(col)
+		res = MongoDropCollection(coll)
 	case "create":
 		res = MongoCreateCollection(db)
 	default:
@@ -58,11 +58,11 @@ func MongoListCollection(db *mongo.Database) []bson.M {
 
 // MongoDropCollection drop mongodb collection
 //
-// param col *mongo.Collection "a handle for a collection"
+// param coll *mongo.Collection "a handle for a collection"
 //
 // return string
-func MongoDropCollection(col *mongo.Collection) string {
-	err := col.Drop(context.TODO())
+func MongoDropCollection(coll *mongo.Collection) string {
+	err := coll.Drop(context.TODO())
 	if err != nil {
 		return fmt.Sprintln("err: ", err)
 	}
