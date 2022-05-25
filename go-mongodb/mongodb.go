@@ -10,6 +10,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 
 	db "go-mongodb/operate"
@@ -21,9 +22,18 @@ import (
 // uri Connection URI
 const uri = "mongodb://39.101.244.245:27017/?maxPoolSize=20&w=majority&connect=direct"
 
-var Client *mongo.Client
+var (
+	Client         *mongo.Client
+	DatabaseName   string
+	CollectionName string
+)
 
 func main() {
+
+	flag.StringVar(&DatabaseName, "dbname", "test", "database name")
+	flag.StringVar(&CollectionName, "cname", "test", "collection name")
+	flag.Parse()
+
 	Client = MongoClient()
 	defer func() {
 		if err := Client.Disconnect(context.TODO()); err != nil {
@@ -37,8 +47,8 @@ func main() {
 	// fmt.Println("Successfully connected and pinged.")
 	// ListMongoDatabaseName()
 
-	mongoDB := Client.Database("test")
-	mongoCollection := mongoDB.Collection("test")
+	mongoDB := Client.Database(DatabaseName)
+	mongoCollection := mongoDB.Collection(CollectionName)
 	opt := "doc"
 	action := "create"
 	var result interface{}
