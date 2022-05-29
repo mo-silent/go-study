@@ -1,0 +1,82 @@
+definitions:
+  response.PodResponse:
+    properties:
+      pod_message: {}
+    type: object
+info:
+  contact: {}
+  description: This is a sample Server pets
+  title: Swagger Example API
+  version: 0.0.1
+paths:
+  /pod/createPod:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.PodResponse'
+      summary: 获取单个 Pod 信息
+      tags:
+      - CreatePod
+  /pod/getAllPod:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.PodResponse'
+      summary: 获取所有 Pod 信息
+      tags:
+      - GetAllPod
+  /pod/getNamespacePod/{namespace}:
+    get:
+      parameters:
+      - default: default
+        description: 命名空间
+        in: path
+        name: namespace
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.PodResponse'
+      summary: 获取单个命名空间中所有的  Pod 信息
+      tags:
+      - GetNamespacePod
+  /pod/getPod:
+    post:
+      parameters:
+      - default: default
+        description: 命名空间
+        in: query
+        name: namespace
+        type: string
+      - description: pod名称
+        in: query
+        name: podname
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.PodResponse'
+      summary: 获取单个 Pod 信息
+      tags:
+      - GetPod
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: x-token
+    type: apiKey
+swagger: "2.0"

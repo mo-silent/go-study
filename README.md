@@ -1,9 +1,13 @@
 > Author mogd 2022-04-08
 > \
-> Update mogd 2022-05-23
+> Update mogd 2022-05-29
 
 # go-study
 go语言学习-比较乱
+
+## k8s-client-go
+
+对 Kubernetes 集群的一些 CURD 操作练习
 
 ## test
 

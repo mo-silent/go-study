@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/go-study.iml" filepath="$PROJECT_DIR$/.idea/go-study.iml" />
+      <module fileurl="file://$PROJECT_DIR$/k8s-client-go/.idea/k8s-client-go.iml" filepath="$PROJECT_DIR$/k8s-client-go/.idea/k8s-client-go.iml" />
     </modules>
   </component>
 </project>
