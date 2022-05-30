@@ -1,5 +1,5 @@
 package response
 
-type PodResponse struct {
-	PodMessage interface{} `json:"pod_message"`
+type CommonResponse struct {
+	Message interface{} `json:"response message"`
 }
