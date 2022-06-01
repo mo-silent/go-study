@@ -31,12 +31,14 @@ var (
 	GOARCH      string
 	File        string
 	OutputFile  string
+	GOTRACEBACK string
 )
 
 func main() {
 	flag.StringVar(&CGO_ENABLED, "cgo", "0", "1 or 0")
 	flag.StringVar(&GOOS, "goos", "linux", "The operating system of the target platform(darwin or freebsd or linux or windows)")
 	flag.StringVar(&GOARCH, "goarch", "amd64", "The architecture of the target platform(386 or amd64 or arm)")
+	flag.StringVar(&GOTRACEBACK, "gotraceback", "crash", "controls the amount of output generated when a Go program fails due to an unrecovered panic or an unexpected runtime condition")
 	flag.StringVar(&File, "infile", "../go-ping/main.go", "Files that need to be compiled")
 	flag.StringVar(&OutputFile, "outfile", "D:/文件/2022-05-16/go-ping.exe", "File that need to be output")
 	flag.Parse()
@@ -50,6 +52,7 @@ func buildFile() {
 	os.Setenv("CGO_ENABLED", CGO_ENABLED)
 	os.Setenv("GOOS", GOOS)
 	os.Setenv("GOARCH", GOARCH)
+	os.Setenv("GOTRACEBACK", "crash")
 
 	var (
 		out, stderr bytes.Buffer
