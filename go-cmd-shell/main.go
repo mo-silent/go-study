@@ -31,7 +31,7 @@ func main() {
 
 	for _, f := range files {
 		name := f.Name()
-		SugarLogger.Info("range file : ", name)
+		SugarLogger.Infof("range file : ", name)
 		WG.Add(1)
 		go zabbixSender(name)
 		syncCount += 1
@@ -48,12 +48,16 @@ func main() {
 //
 // Param string fileName
 func zabbixSender(fileName string) {
-	cmd := "zabbix_sender  -z 172.16.30.16 -p10051 -NT -vv -i " + DIR + fileName +
+	cmdStr := "zabbix_sender  -z 172.16.30.16 -p10051 -NT -vv -i " + DIR + fileName +
 		" > /var/log/zabbix_sender_log/" + fileName + ".log"
-	_, err := exec.Command("/bin/sh", "-c", cmd).Output()
+	cmd := exec.Command("/bin/sh", "-c", cmdStr)
+	err := cmd.Start()
 	if err != nil {
 		SugarLogger.Fatal(err)
 	}
+	SugarLogger.Infof("Waiting for command to finish...", cmdStr)
+	err = cmd.Wait()
+	SugarLogger.Infof("Command finished with message: ", err)
 	// SugarLogger.Info("write: ", string(out[:]))
 	WG.Done()
 }
