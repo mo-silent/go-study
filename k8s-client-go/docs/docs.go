@@ -25,11 +25,57 @@ const docTemplate = `{
                     "CreatePod"
                 ],
                 "summary": "获取单个 Pod 信息",
+                "parameters": [
+                    {
+                        "description": "Pod simple configuration",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.PodReques"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.PodResponse"
+                            "$ref": "#/definitions/response.CommonResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/pod/deletePod": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "DeletePod"
+                ],
+                "summary": "删除单个 Pod",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "default",
+                        "description": "命名空间",
+                        "name": "namespace",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pod名称",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.CommonResponse"
                         }
                     }
                 }
@@ -48,7 +94,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.PodResponse"
+                            "$ref": "#/definitions/response.CommonResponse"
                         }
                     }
                 }
@@ -76,7 +122,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.PodResponse"
+                            "$ref": "#/definitions/response.CommonResponse"
                         }
                     }
                 }
@@ -102,7 +148,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "pod名称",
-                        "name": "podname",
+                        "name": "name",
                         "in": "query",
                         "required": true
                     }
@@ -111,7 +157,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.PodResponse"
+                            "$ref": "#/definitions/response.CommonResponse"
                         }
                     }
                 }
@@ -119,10 +165,33 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "response.PodResponse": {
+        "request.PodReques": {
             "type": "object",
             "properties": {
-                "pod_message": {}
+                "containerName": {
+                    "type": "string"
+                },
+                "containerPort": {
+                    "type": "integer"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "labels": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "podName": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.CommonResponse": {
+            "type": "object",
+            "properties": {
+                "response message": {}
             }
         }
     },

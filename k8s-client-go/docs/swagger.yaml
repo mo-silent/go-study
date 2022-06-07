@@ -1,7 +1,22 @@
 definitions:
-  response.PodResponse:
+  request.PodReques:
     properties:
-      pod_message: {}
+      containerName:
+        type: string
+      containerPort:
+        type: integer
+      image:
+        type: string
+      labels:
+        additionalProperties:
+          type: string
+        type: object
+      podName:
+        type: string
+    type: object
+  response.CommonResponse:
+    properties:
+      response message: {}
     type: object
 info:
   contact: {}
@@ -11,16 +26,46 @@ info:
 paths:
   /pod/createPod:
     post:
+      parameters:
+      - description: Pod simple configuration
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.PodReques'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.PodResponse'
+            $ref: '#/definitions/response.CommonResponse'
       summary: 获取单个 Pod 信息
       tags:
       - CreatePod
+  /pod/deletePod:
+    post:
+      parameters:
+      - default: default
+        description: 命名空间
+        in: query
+        name: namespace
+        type: string
+      - description: pod名称
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CommonResponse'
+      summary: 删除单个 Pod
+      tags:
+      - DeletePod
   /pod/getAllPod:
     get:
       produces:
@@ -29,7 +74,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.PodResponse'
+            $ref: '#/definitions/response.CommonResponse'
       summary: 获取所有 Pod 信息
       tags:
       - GetAllPod
@@ -47,7 +92,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.PodResponse'
+            $ref: '#/definitions/response.CommonResponse'
       summary: 获取单个命名空间中所有的  Pod 信息
       tags:
       - GetNamespacePod
@@ -61,7 +106,7 @@ paths:
         type: string
       - description: pod名称
         in: query
-        name: podname
+        name: name
         required: true
         type: string
       produces:
@@ -70,7 +115,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.PodResponse'
+            $ref: '#/definitions/response.CommonResponse'
       summary: 获取单个 Pod 信息
       tags:
       - GetPod

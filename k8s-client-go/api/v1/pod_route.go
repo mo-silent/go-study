@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strings"
 
+	"gitee.com/MoGD/go-study/k8s-client-go/model/common/request"
+
 	"gitee.com/MoGD/go-study/k8s-client-go/global"
 	"gitee.com/MoGD/go-study/k8s-client-go/model/common/response"
 	"github.com/gin-gonic/gin"
@@ -83,26 +85,28 @@ func GetPod(c *gin.Context) {
 // @Tags CreatePod
 // @Summary 获取单个 Pod 信息
 // @Produce application/json
+// @Param data body request.PodReques true "Pod simple configuration"
 // @Success 200 {object} response.CommonResponse
 // @Router /pod/createPod [post]
 func CreatePod(c *gin.Context) {
+	var podReq request.PodReques
+	_ = c.ShouldBindJSON(&podReq)
+	// fmt.Println(podReq)
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: "demo-pod",
-			Labels: map[string]string{
-				"app": "demo",
-			},
+			Name:   podReq.PodName,
+			Labels: podReq.Labels,
 		},
 		Spec: corev1.PodSpec{
 			Containers: []corev1.Container{
 				{
-					Name:  "demo-pod",
-					Image: "nginx:1.12",
+					Name:  podReq.ContainerName,
+					Image: podReq.Image,
 					Ports: []corev1.ContainerPort{
 						{
 							Name:          "http",
 							Protocol:      corev1.ProtocolTCP,
-							ContainerPort: 80,
+							ContainerPort: podReq.ContainerPort,
 						},
 					},
 				},
@@ -121,15 +125,18 @@ func CreatePod(c *gin.Context) {
 		panic(err.Error())
 	}
 	// 循环获取 pod 状态，检查为 Running 状态后，返回 pod 信息
-	for {
-		podStatus, _ := podClient.Get(context.TODO(), "demo-pod", metav1.GetOptions{})
-		if podStatus.Status.Phase == "Running" {
-			c.JSON(http.StatusOK, response.CommonResponse{
-				Message: podStatus,
-			})
-			break
-		}
-	}
+	// for {
+	// 	podStatus, _ := podClient.Get(context.TODO(), "demo-pod", metav1.GetOptions{})
+	// 	if podStatus.Status.Phase == "Running" {
+	// 		c.JSON(http.StatusOK, response.CommonResponse{
+	// 			Message: podStatus,
+	// 		})
+	// 		break
+	// 	}
+	// }
+	c.JSON(http.StatusOK, response.CommonResponse{
+		Message: "create pod interface call success! Please watch pod status until the status is running.",
+	})
 
 }
 
