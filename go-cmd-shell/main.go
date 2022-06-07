@@ -48,7 +48,7 @@ func main() {
 //
 // Param string fileName
 func zabbixSender(fileName string) {
-	cmd := "zabbix_sender  -z 172.16.30.16 -p10051 -NT -vv -i" + DIR + fileName +
+	cmd := "zabbix_sender  -z 172.16.30.16 -p10051 -NT -vv -i " + DIR + fileName +
 		" > /var/log/zabbix_sender_log/" + fileName + ".log"
 	_, err := exec.Command("/bin/sh", "-c", cmd).Output()
 	if err != nil {
