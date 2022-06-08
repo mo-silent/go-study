@@ -4,6 +4,7 @@ import (
 	"flag"
 	"io/ioutil"
 	"os/exec"
+	"strings"
 	"sync"
 
 	"github.com/natefinch/lumberjack"
@@ -16,6 +17,7 @@ var (
 	SugarLogger *zap.SugaredLogger
 	LogFile     string
 	DIR         string
+	IP          string = "127.0.0.1"
 )
 
 func main() {
@@ -48,16 +50,20 @@ func main() {
 //
 // Param string fileName
 func zabbixSender(fileName string) {
-	cmdStr := "zabbix_sender  -z 172.16.30.16 -p10051 -NT -vv -i " + DIR + fileName +
-		" > /var/log/zabbix_sender_log/" + fileName + ".log"
-	cmd := exec.Command("/bin/sh", "-c", cmdStr)
-	err := cmd.Start()
-	if err != nil {
-		SugarLogger.Fatal(err)
+	if strings.Contains(DIR, "zabbix-proxy-sz2") {
+		IP = "39.96.193.87"
 	}
-	SugarLogger.Infof("Waiting for command to finish...", cmdStr)
-	err = cmd.Wait()
-	SugarLogger.Infof("Command finished with message: ", err)
+	if strings.Contains(DIR, "zabbixproxysz1") {
+		IP = "139.196.122.84"
+	}
+	if strings.Contains(DIR, "zabbixproxyhk1") {
+		IP = "172.16.30.16"
+	}
+	cmdStr := "zabbix_sender  -z " + IP + " -p10051 -NT -vv -i '" + DIR + fileName +
+		"' > /var/log/zabbix_sender_log/" + fileName + ".log"
+	cmd := exec.Command("/bin/sh", "-c", cmdStr)
+	err := cmd.Run()
+	SugarLogger.Infof("Command finished with error: ", err)
 	// SugarLogger.Info("write: ", string(out[:]))
 	WG.Done()
 }
