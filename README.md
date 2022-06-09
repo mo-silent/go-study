@@ -73,6 +73,14 @@ go-smokeping-conf 读取 CSV 文件，生成 smokeping 的配置文件
 
 go-cloud-ping 读取文件，获取ping 延迟和丢包
 
+参数说明：
+1. `infile` 要测试的 IP 列表，一个 IP 一行就行，CSV 格式
+2. `outpath` 结果输出的路径
+3. `region` 结果输出文件的前缀
+4. `log` 程序运行日志的输出
+5. `core` CPU 内核数量，默认为 4
+6. `channel` 协程数量，默认为 100
+
 ## go-zabbix-sender
 
 go-zabbix-sender 使用 exec 执行 linux 命令，调用 zabbix_sender 发送历史数据到 zabbix，用于 zabbix 历史数据迁移
