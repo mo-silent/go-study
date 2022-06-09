@@ -1,6 +1,6 @@
 > Author mogd 2022-04-08
 > \
-> Update mogd 2022-05-29
+> Update mogd 2022-06-09
 
 # go-study
 go语言学习-比较乱
@@ -72,6 +72,18 @@ go-smokeping-conf 读取 CSV 文件，生成 smokeping 的配置文件
 > 个人用途，忽略
 
 go-cloud-ping 读取文件，获取ping 延迟和丢包
+
+## go-zabbix-sender
+
+go-zabbix-sender 使用 exec 执行 linux 命令，调用 zabbix_sender 发送历史数据到 zabbix，用于 zabbix 历史数据迁移
+
+参数说明：
+1. `-dir` 历史数据文件存储的目录
+2. `log` 程序运行日志的输出
+
+```shell
+go run main.go -dir=/root/test/ -log=./go-zabbix-sender.log
+```
 
 ## PAT 
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"io/ioutil"
 	"os/exec"
@@ -22,7 +23,7 @@ var (
 
 func main() {
 	flag.StringVar(&DIR, "dir", "./", "input directory, example /root/zabbix-review-export-import/history/")
-	flag.StringVar(&LogFile, "log", "./go-cmd-shell.log", "log file")
+	flag.StringVar(&LogFile, "log", "./go-zabbix-sender.log", "log file")
 	flag.Parse()
 
 	InitLogger()
@@ -44,6 +45,7 @@ func main() {
 	}
 
 	WG.Wait()
+	SugarLogger.Info("Done!")
 }
 
 // zabbixSender Invoke the Linux command line to execute zabbix_sender, in order to import zabbix historical data
@@ -51,19 +53,32 @@ func main() {
 // Param string fileName
 func zabbixSender(fileName string) {
 	if strings.Contains(DIR, "zabbix-proxy-sz2") {
-		IP = "39.96.193.87"
+		IP = "172.16.30.16"
 	}
 	if strings.Contains(DIR, "zabbixproxysz1") {
-		IP = "139.196.122.84"
+		IP = "172.16.30.16"
 	}
 	if strings.Contains(DIR, "zabbixproxyhk1") {
 		IP = "172.16.30.16"
+		WG.Done()
+		return
 	}
-	cmdStr := "zabbix_sender  -z " + IP + " -p10051 -NT -vv -i '" + DIR + fileName +
-		"' > /var/log/zabbix_sender_log/" + fileName + ".log"
+	cmdStr := "zabbix_sender  -z " + IP + " -p10051 -NT -vv -i " + DIR + fileName +
+		" > /var/log/zabbix_sender_log/" + fileName + ".log"
 	cmd := exec.Command("/bin/sh", "-c", cmdStr)
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
 	err := cmd.Run()
-	SugarLogger.Infof("Command finished with error: ", err)
+	if err != nil {
+		SugarLogger.Error(err.Error(),
+			zap.String("stderr: ", stderr.String()),
+		)
+	} else {
+		SugarLogger.Info(zap.String("out: ", out.String()))
+	}
+	// SugarLogger.Infof("Command finished with error: ", err)
 	// SugarLogger.Info("write: ", string(out[:]))
 	WG.Done()
 }

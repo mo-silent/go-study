@@ -1,4 +1,4 @@
-module go-cmd-shell
+module go-zabbix-sender
 
 go 1.18
 
