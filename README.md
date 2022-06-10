@@ -1,6 +1,6 @@
 > Author mogd 2022-04-08
 > \
-> Update mogd 2022-06-09
+> Update mogd 2022-06-10
 
 # go-study
 go语言学习-比较乱
