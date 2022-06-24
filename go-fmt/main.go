@@ -21,7 +21,7 @@ func WalkDir(dirPth string) (dirs []string, err error) {
 		}
 		//将目录路径改写成正确格式
 		if dirname != "./" {
-			dirname = strings.Replace(dirname, "\\", "/", -1)
+			dirname = "./" + strings.Replace(dirname, "\\", "/", -1)
 		}
 		if strings.Contains(dirname, ".git") || strings.Contains(dirname, ".idea") {
 			return nil
@@ -36,6 +36,7 @@ func WalkDir(dirPth string) (dirs []string, err error) {
 //基于windows，执行go fmt命令
 func goFmtDirs(path string) {
 	cmd := exec.Command("go", "fmt", path)
+	fmt.Println(cmd)
 	stdout, err := cmd.StdoutPipe()
 	//获取输出对象，可以从该对象中读取输出结果
 	if err != nil {
@@ -56,7 +57,7 @@ func goFmtDirs(path string) {
 }
 
 func main() {
-	path := flag.String("path", "D:\\Go/src/gin-kubernetes/", "The dir path")
+	path := flag.String("path", "./", "The dir path")
 	flag.Parse()
 	dirs, err := WalkDir(*path)
 	if err != nil {
