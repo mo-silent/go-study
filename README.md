@@ -92,3 +92,7 @@ go run main.go -dir=/root/test/ -log=./go-zabbix-sender.log
 ## PAT 
 
 PAT 浙大的PAT真题练习代码
+
+## go-fmt
+
+go-fmt 使用 go fmt 命令格式化 .go 文件
