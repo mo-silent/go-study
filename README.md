@@ -1,6 +1,6 @@
-> Author mogd 2022-04-08
+> Author silent.mo 2022-04-08
 > \
-> Update mogd 2022-06-10
+> Update silent.mo 2022-12-30
 
 # go-study
 go语言学习-比较乱
@@ -96,3 +96,6 @@ PAT 浙大的PAT真题练习代码
 ## go-fmt
 
 go-fmt 使用 go fmt 命令格式化 .go 文件
+
+## go-rabbitmq
+ go-rabbitmq 是rabbitmq官方代码示例
