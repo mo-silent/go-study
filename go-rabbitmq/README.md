@@ -32,10 +32,14 @@ Delivery tags 唯一的标识 channel 中的传递，并且作用域为每一个
 
 消息应答有两种模式：
 - 自动模式——不安全的，不适用与所有的工作负载，并且会导致消费者过载
-- 手动模式——手动的有 positive or negative 两种
+- 手动模式——手动的有 positive or negative 两种，手动客户端应答是完全异步的
   - ack positive: 确认消息处理完成，并删除
   - nack + requeue negative: 消息重新排队，再次处理
   - reject negative: 消息路由到死信(dead-letter)队列
 
+#### Publisher Confirms
+网络可能出现抖动或未知原因导致故障，而排查故障需要一定的时间。因此消息可能在网络传输过程中丢失，也可能会延迟交付。
+
+使用标准的AMQP 0-9-1，确保消息不会丢失唯一的方法是使用事物。 transactional channel 不能进入到 confirm model
 
 
