@@ -1,6 +1,6 @@
 > Author silent.mo 2022-04-08
 > \
-> Update silent.mo 2022-12-30
+> Update silent.mo 2023-01-10
 
 # go-study
 go语言学习-比较乱
@@ -99,3 +99,8 @@ go-fmt 使用 go fmt 命令格式化 .go 文件
 
 ## go-rabbitmq
  go-rabbitmq 是rabbitmq官方代码示例
+ 
+## go-graphql
+go-graphql 学习 GraphQL 
+client 为客户端，使用 SkyWalking 作为 server端。
+server 为服务端，自建 GraphQL 服务端。（暂定）
