@@ -10,15 +10,55 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-ping/ping"
+	"github.com/urfave/cli"
 	"log"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
-
-	"github.com/go-ping/ping"
 )
 
 func main() {
+	app := cli.NewApp()
+	app.Name = "test"
+	app.Usage = "test"
+	app.Commands = []cli.Command{
+		runCommand,
+	}
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
+}
+
+var runCommand = cli.Command{
+	Name:  "run",
+	Usage: "Create a container",
+	Flags: []cli.Flag{
+		// integrate -i and -t for convenience
+		&cli.BoolFlag{
+			Name:  "it",
+			Usage: "open an interactive tty(pseudo terminal)",
+		},
+	},
+	Action: func(context *cli.Context) error {
+		args := context.Args()
+		//if args.Len() == 0 {
+		//	return errors.New("Run what?")
+		//}
+		containerCmd := args.Get(0) // command
+
+		// check whether type `-it`
+		tty := context.Bool("it") // presudo terminal
+
+		// 这个函数在下面定义
+		fmt.Printf("cmd %v, tty: %v", containerCmd, tty)
+
+		return nil
+	},
+}
+
+func Other() {
 	addressResponse := "巴西圣保罗 华为"
 	cloud := regexp.MustCompile(`(微软云)|(谷歌云)|(亚马逊云)|(华为云)|(阿里云)|(腾讯云)`)
 	judgeTmp := cloud.FindAllStringSubmatch(addressResponse, -1)
