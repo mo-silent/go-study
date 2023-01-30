@@ -9,7 +9,9 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"github.com/andygrunwald/go-jira"
 	"github.com/go-ping/ping"
 	"github.com/urfave/cli"
 	"log"
@@ -20,15 +22,64 @@ import (
 )
 
 func main() {
-	app := cli.NewApp()
-	app.Name = "test"
-	app.Usage = "test"
-	app.Commands = []cli.Command{
-		runCommand,
+	base := "http://127.0.0.1:28080"
+	tp := jira.BasicAuthTransport{
+		Username: "silent",
+		Password: "123456",
 	}
-	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
+
+	jiraClient, err := jira.NewClient(tp.Client(), base)
+	if err != nil {
+		panic(err)
 	}
+	fmt.Println("ok")
+	//issue, _, _ := jiraClient.Issue.Get("SRE-10", nil)
+	////currentStatus := issue.Fields.Status.Name
+	//fmt.Println(issue.Fields.Assignee)
+	//fmt.Println(issue.Fields.Type)
+	//fmt.Println(issue.Fields.Status)
+	issue := jira.Issue{
+		Fields: &jira.IssueFields{
+			Type: jira.IssueType{
+				Name: "任务",
+			},
+			Project: jira.Project{
+				Key: "SRE",
+			},
+			Summary:     "Test Issue from Go-JIRA library",
+			Description: "Description of my bug report",
+			Reporter: &jira.User{
+				Name:         "silent",
+				EmailAddress: "silent.mo@xx.com",
+				DisplayName:  "silent.mo",
+			},
+			Priority: &jira.Priority{
+				Name: "Medium",
+			},
+
+			//Status: &jira.Status{
+			//	Name: "待办",
+			//},
+		},
+	}
+	fmt.Println(issue)
+	// Create the issue
+	newIssue, resp, err := jiraClient.Issue.Create(&issue)
+	if err != nil {
+		if resp != nil {
+			fmt.Printf("%s\n", resp.Status)
+			fmt.Println(err)
+			buf := new(bytes.Buffer)
+			buf.ReadFrom(resp.Body)
+			newStr := buf.String()
+
+			fmt.Printf(newStr)
+		}
+		fmt.Println(resp)
+		os.Exit(0)
+	}
+	fmt.Printf("%s: %s\n", newIssue.Key, newIssue.Fields.Summary)
+
 }
 
 var runCommand = cli.Command{
@@ -56,6 +107,18 @@ var runCommand = cli.Command{
 
 		return nil
 	},
+}
+
+func CobraCommand() {
+	app := cli.NewApp()
+	app.Name = "test"
+	app.Usage = "test"
+	app.Commands = []cli.Command{
+		runCommand,
+	}
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func Other() {
