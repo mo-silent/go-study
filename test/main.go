@@ -13,7 +13,9 @@ import (
 	"fmt"
 	"github.com/andygrunwald/go-jira"
 	"github.com/go-ping/ping"
+	jsoniter "github.com/json-iterator/go"
 	"github.com/urfave/cli"
+	"io"
 	"log"
 	"os"
 	"regexp"
@@ -22,6 +24,43 @@ import (
 )
 
 func main() {
+	//jsoniter.Unmarshal()
+	var rq map[string]interface{}
+	jsonContent, err := readFileToByte("rabbitmq_queues.json")
+	if err != nil {
+		fmt.Printf("open file error: %v\n", err.Error())
+		return
+	}
+	if err := jsoniter.Unmarshal(jsonContent, &rq); err != nil {
+		fmt.Printf("json umarshal error: %v", err.Error())
+		return
+	}
+	fmt.Println(rq)
+}
+
+type rabbitMqQueues struct {
+	Queues []Queues `json:"queues"`
+}
+
+type Arguments map[string]interface{}
+
+type Queues struct {
+	Name       string    `json:"name"`
+	Vhost      string    `json:"vhost"`
+	Durable    bool      `json:"durable"`
+	AutoDelete bool      `json:"auto_delete"`
+	Arguments  Arguments `json:"arguments,omitempty"`
+}
+
+func readFileToByte(path string) ([]byte, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	return io.ReadAll(f)
+}
+
+func jiraInit() {
 	base := "http://127.0.0.1:28080"
 	tp := jira.BasicAuthTransport{
 		Username: "silent",
@@ -79,7 +118,6 @@ func main() {
 		os.Exit(0)
 	}
 	fmt.Printf("%s: %s\n", newIssue.Key, newIssue.Fields.Summary)
-
 }
 
 var runCommand = cli.Command{

@@ -1,0 +1,23 @@
+{
+  "queues": [{
+    "name": "001",
+    "vhost": "/test",
+    "durable": true,
+    "auto_delete": false,
+    "arguments": {
+      "x-dead-letter-exchange": "dlx-fanout-test-exchange",
+      "x-dead-letter-routing-key": "001",
+      "x-queue-type": "classic"
+    }
+  },
+    {
+      "name": "dlx-001",
+      "vhost": "/test",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    }
+  ]
+}
